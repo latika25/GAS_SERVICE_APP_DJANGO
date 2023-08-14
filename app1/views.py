@@ -3,7 +3,7 @@ from django.http import HttpResponse
 from django.contrib.auth import authenticate , login as loginUser , logout
 from django.contrib.auth.forms import UserCreationForm , AuthenticationForm
 # Create your views here.
-from app1.forms import ServiceRequestForm
+from app1.forms import ServiceRequestForm,SignUpForm
 from app1.models import ServiceRequest
 from django.contrib.auth.decorators import login_required
 
@@ -44,6 +44,7 @@ def signup(request):
 
     if request.method == 'GET':
         form = UserCreationForm()
+        print("form=",form)
         context = {
             "form" : form
         }
@@ -57,6 +58,30 @@ def signup(request):
         if form.is_valid():
             user = form.save()
             print(user)
+            if user is not None:
+                return redirect('login')
+        else:
+            return render(request , 'signup.html' , context=context)
+
+
+def signup_custom(request):
+
+    if request.method == 'GET':
+        form = SignUpForm()
+        print("form=",form)
+        context = {
+            "form" : form
+        }
+        return render(request , 'signup.html' , context=context)
+    else:
+        print(request.POST)
+        form = SignUpForm(request.POST)  
+        context = {
+            "form" : form
+        }
+        if form.is_valid():
+            user = form.save()
+            print("user=",user)
             if user is not None:
                 return redirect('login')
         else:
@@ -98,6 +123,45 @@ def signout(request):
     return redirect('login')
 
 def profile(request):
-    user = request.user
-    print(user)
-    return HttpResponse(user.id)
+    if request.method == 'GET':
+        user = request.user
+        print(user)
+        # print("form\n",form)
+        context={
+            # "form":form,
+            "first_name":user.first_name,
+            "last_name":user.last_name,
+            "name":(user.first_name).upper()+" "+(user.last_name).upper(),
+            "id":user.id,
+            "email":user.email,
+            "member_from":(user.date_joined).strftime('%Y-%m-%d %H:%M:%S'),
+            # "m":user.date_joined,
+            "username":user.username
+                }
+        # t=context['m']
+        # print("m=",t,"\n",t.strftime('%Y-%m-%d %H:%M:%S'))
+        return render(request , 'profile.html' , context=context)
+    else:
+        print("form=",request.POST)
+        form = (request.POST)  
+        print("first name=",form['first_name'])
+        # user = {
+        #     "form" : form
+        # }
+        
+        user=request.user
+        user.first_name=form['first_name']
+        user.last_name=form['last_name']
+        user.email=form['email']
+        user.username=form['username']
+        print("user in profile:",user)
+        user.save()
+        if user is not None:
+            return redirect('profile')
+        
+
+
+
+
+
+    
