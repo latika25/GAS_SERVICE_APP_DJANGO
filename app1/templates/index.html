@@ -21,70 +21,10 @@
 
 
 
-      <div class="col">
-        <div class="border">
-
-          {% if todos|length == 0 %}
-
-          <div class="p-4">
-            <br>
-            <br>
-            <div class="alert alert-info text-center">
-              <p class="" style="font-size: 30px;">No Todos</p>
-            </div>
-            <br>
-            <br>
-          </div>
-
-          {%else%}
-          <div>
-            <table class="table">
-              <thead>
-                <tr>
-                  <th>#</th>
-                  <th>Request Type</th>
-                  <th>Status</th>
-                  <th>Details</th>
-                  <th>Submitted At</th>
-                  <!-- <th>Action</th> -->
-                </tr>
-              </thead>
-
-              <tbody>
-
-                {% for todo in todos %}
-                <tr>
-                  <td>{{forloop.counter}}</td>
-                  <td>{{todo.request_type}}</td>
-                  <td>
-                    {% if todo.status == 'C'%}
-                    Completed
-                    {%else%}
-                    Pending
-                    {%endif%}
-                  </td>
-                  <td>{{todo.details}}</td>
-                  <td>{{todo.submitted_at}}</td>
-                  <!-- <td>
-                    <a href="/delete-todo/{{todo.id}}" title="Delete" class="">🗑️</a>
-                    {% if todo.status == 'P'%}
-                    <a href="/change-status/{{todo.id}}/C" title="Mark Completed" class="">✅</a>
-                    {%else%}
-                    <a href="/change-status/{{todo.id}}/P" title="Mark Pending" class="">🕒</a>
-                    {%endif%}
-                  </td> -->
-                </tr>
-                {%endfor%}
-
-
-              </tbody>
-            </table>
-          </div>
-          {%endif%}
-
-        </div>
-      </div>
+     
     </div>
   </div>
 </div>
+
+
 {% endblock %}

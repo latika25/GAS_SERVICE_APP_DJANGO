@@ -16,6 +16,14 @@ def home(request):
         todos = ServiceRequest.objects.filter(user = user).order_by('submitted_at')
         return render(request , 'index.html' , context={'form' : form , 'todos' : todos})
 
+@login_required(login_url='login')
+def requests_list(request):
+    if request.user.is_authenticated:
+        user = request.user
+        form = ServiceRequestForm()
+        todos = ServiceRequest.objects.filter(user = user).order_by('submitted_at')
+        return render(request , 'request.html' , context={'form' : form , 'todos' : todos})
+
 def login(request):
     if request.method == 'GET':
         form1 = AuthenticationForm()
@@ -101,7 +109,7 @@ def add_todo(request):
             todo.user = user
             todo.save()
             print(todo)
-            return redirect("home")
+            return redirect("requests")
         else: 
             return render(request , 'index.html' , context={'form' : form})
 
@@ -117,6 +125,9 @@ def change_todo(request , id  , status):
     todo.save()
     return redirect('home')
 
+def show_details(request , id ):
+    todo = ServiceRequest.objects.get(pk = id)
+    return render(request , 'details.html' , context={"todo":todo})
 
 def signout(request):
     logout(request)
