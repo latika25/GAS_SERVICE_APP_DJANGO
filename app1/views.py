@@ -159,6 +159,41 @@ def profile(request):
         if user is not None:
             return redirect('profile')
         
+def edit_profile(request):
+    if request.method == 'POST':
+        print("form=",request.POST)
+        form = (request.POST)  
+        print("first name=",form['first_name'])
+        # user = {
+        #     "form" : form
+        # }
+        
+        user=request.user
+        user.first_name=form['first_name']
+        user.last_name=form['last_name']
+        user.email=form['email']
+        user.username=form['username']
+        print("user in profile:",user)
+        user.save()
+        # if user is not None:
+        return redirect('profile')
+    else:
+        print("in get edit profile")
+        user = request.user
+        print(user)
+        # print("form\n",form)
+        context={
+            # "form":form,
+            "first_name":user.first_name,
+            "last_name":user.last_name,
+            "name":(user.first_name).upper()+" "+(user.last_name).upper(),
+            "id":user.id,
+            "email":user.email,
+            "member_from":(user.date_joined).strftime('%Y-%m-%d %H:%M:%S'),
+            # "m":user.date_joined,
+            "username":user.username
+                }
+        return render(request , 'edit_profile.html' , context=context)
 
 
 
